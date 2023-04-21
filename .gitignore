@@ -1,0 +1,7 @@
+# work
+_build
+_deps
+src
+
+# tools etc.
+tools
