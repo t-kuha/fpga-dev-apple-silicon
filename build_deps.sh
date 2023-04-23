@@ -16,16 +16,20 @@ function downloadsrc () {
     fi
 }
 
-# set up env.
-export PATH=${PATH}:~/Documents/programs/cmake/CMake.app/Contents/bin
-
 # create temp. directory
 TOP_DIR=$(dirname $(realpath "${BASH_SOURCE[0]}"))
-DEPS_DIR=${TOP_DIR}/_deps
-SRC_DIR=${TOP_DIR}/src
-BUILD_DIR=${TOP_DIR}/_build
 TOOLS_DIR=${TOP_DIR}/tools
+WORK_DIR=${TOP_DIR}/_work
+DEPS_DIR=${WORK_DIR}/deps
+SRC_DIR=${WORK_DIR}/src
+BUILD_DIR=${WORK_DIR}/build
 
+if [ ! -e ${TOOLS_DIR} ]; then
+    mkdir -p ${TOOLS_DIR}/bin
+fi
+if [ ! -e ${WORK_DIR} ]; then
+    mkdir ${WORK_DIR}
+fi
 if [ ! -e ${DEPS_DIR} ]; then
     mkdir ${DEPS_DIR}
 fi
@@ -35,9 +39,8 @@ fi
 if [ ! -e ${BUILD_DIR} ]; then
     mkdir ${BUILD_DIR}
 fi
-if [ ! -e ${TOOLS_DIR} ]; then
-    mkdir -p ${TOOLS_DIR}/bin
-fi
+
+# update PATH env. variable
 export PATH=${TOOLS_DIR}/bin:${TOOLS_DIR}/bin/CMake.app/Contents/bin:${PATH}
 
 # ----- prepare CMake
@@ -47,6 +50,22 @@ if [ ! -e ${TOOLS_DIR}/bin/CMake.app ]; then
 fi
 
 # ----- download sources
+downloadsrc \
+https://ftp.gnu.org/gnu/gawk/gawk-5.2.1.tar.xz \
+gawk.tar.xz gawk
+
+downloadsrc \
+https://ftp.gnu.org/gnu/sed/sed-4.9.tar.xz \
+sed-4.9.tar.xz sed
+
+downloadsrc \
+https://ftp.gnu.org/gnu/texinfo/texinfo-7.0.3.tar.xz \
+texinfo.tar.xz texinfo
+
+downloadsrc \
+https://ftp.gnu.org/gnu/m4/m4-1.4.19.tar.xz \
+m4.tar.xz m4
+
 downloadsrc \
 https://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz \
 pkg-config.tar.gz pkg-config
@@ -92,6 +111,34 @@ https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz \
 eigen.tar.gz eigen
 
 # ----- build
+# gawk
+pushd ${TOP_DIR} > /dev/null
+cd ${DEPS_DIR}/gawk
+./configure --prefix=${TOOLS_DIR}
+make -j8 install
+popd > /dev/null
+
+# sed
+pushd ${TOP_DIR} > /dev/null
+cd ${DEPS_DIR}/sed
+./configure --prefix=${TOOLS_DIR}
+make -j8 install
+popd > /dev/null
+
+# texinfo
+pushd ${TOP_DIR} > /dev/null
+cd ${DEPS_DIR}/texinfo
+./configure --prefix=${TOOLS_DIR} --disable-perl-xs
+make -j8 install
+popd > /dev/null
+
+# m4
+pushd ${TOP_DIR} > /dev/null
+cd ${DEPS_DIR}/m4
+./configure --prefix=${TOOLS_DIR}
+make -j8 install
+popd > /dev/null
+
 # pkg-config
 pushd ${TOP_DIR} > /dev/null
 cd ${DEPS_DIR}/pkg-config
