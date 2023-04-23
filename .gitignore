@@ -1,7 +1,5 @@
-# work
-_build
-_deps
-src
+# working directory
+_work
 
 # tools etc.
 tools
