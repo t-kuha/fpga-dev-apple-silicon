@@ -154,7 +154,7 @@ make -j8 install
 popd > /dev/null
 
 # libftdi1
-cmake -S ${DEPS_DIR}/libftdi1 -B ${BUILD_DIR}/libftdi -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF -DSTATICLIBS=OFF
+cmake -S ${DEPS_DIR}/libftdi1 -B ${BUILD_DIR}/libftdi -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF -DSTATICLIBS=OFF -DCMAKE_INSTALL_NAME_DIR=${TOOLS_DIR}/lib
 cmake --build ${BUILD_DIR}/libftdi -- -j8
 cmake --install ${BUILD_DIR}/libftdi
 
