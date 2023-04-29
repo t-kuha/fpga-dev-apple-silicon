@@ -1,0 +1,8 @@
+name: build test
+run-name: Build Test with GitHub Actions
+on: [push]
+jobs:
+  check-bats-version:
+    runs-on: macos-13
+    steps:
+      - run: build_deps.sh
