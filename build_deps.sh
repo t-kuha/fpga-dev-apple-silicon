@@ -1,10 +1,10 @@
 #!/bin/sh
 
 function downloadsrc () {
-    # usage: downloadsrc <url> <tar_name> <lib_name>
+    # usage: downloadsrc <url> <tar_name w/o version>
     url=$1
     tar_name=$2
-    lib_name=$3
+    lib_name=${tar_name%%.*}
     # donwload
     if [ ! -e ${SRC_DIR}/${tar_name} ]; then
         curl -L -o ${SRC_DIR}/${tar_name} ${url}
@@ -52,63 +52,63 @@ fi
 # ----- download sources
 downloadsrc \
 https://ftp.gnu.org/gnu/gawk/gawk-5.2.1.tar.xz \
-gawk.tar.xz gawk
+gawk.tar.xz
 
 downloadsrc \
 https://ftp.gnu.org/gnu/sed/sed-4.9.tar.xz \
-sed-4.9.tar.xz sed
+sed-4.9.tar.xz
 
 downloadsrc \
 https://ftp.gnu.org/gnu/texinfo/texinfo-7.0.3.tar.xz \
-texinfo.tar.xz texinfo
+texinfo.tar.xz
 
 downloadsrc \
 https://ftp.gnu.org/gnu/m4/m4-1.4.19.tar.xz \
-m4.tar.xz m4
+m4.tar.xz
 
 downloadsrc \
 https://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz \
-pkg-config.tar.gz pkg-config
+pkg-config.tar.gz
 
 downloadsrc \
 https://github.com/libusb/libusb/releases/download/v1.0.26/libusb-1.0.26.tar.bz2 \
-libusb.tar.bz2 libusb
+libusb.tar.bz2
 
 downloadsrc \
 https://www.intra2net.com/en/developer/libftdi/download/libftdi1-1.4.tar.bz2 \
-libftdi1.tar.bz2 libftdi1
+libftdi1.tar.bz2
 
 downloadsrc \
 https://www.zlib.net/zlib-1.2.13.tar.xz \
-zlib.tar.xz zlib
+zlib.tar.xz
 
 downloadsrc \
 https://ftp.gnu.org/gnu/readline/readline-8.2.tar.gz \
-readline.tar.gz readline
+readline.tar.gz
 
 downloadsrc \
 https://ftp.gnu.org/gnu/bison/bison-3.8.2.tar.xz \
-bison.tar.xz bison
+bison.tar.xz
 
 downloadsrc \
 https://github.com/libffi/libffi/releases/download/v3.4.4/libffi-3.4.4.tar.gz \
-libffi.tar.gz libffi
+libffi.tar.gz
 
 downloadsrc \
 https://www.openssl.org/source/openssl-3.1.0.tar.gz \
-openssl.tar.gz openssl
+openssl.tar.gz
 
 downloadsrc \
 https://www.python.org/ftp/python/3.11.3/Python-3.11.3.tar.xz \
-Python.tar.xz Python
+Python.tar.xz
 
 downloadsrc \
 https://boostorg.jfrog.io/artifactory/main/release/1.82.0/source/boost_1_82_0.tar.gz \
-boost.tar.gz boost
+boost.tar.gz
 
 downloadsrc \
 https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz \
-eigen.tar.gz eigen
+eigen.tar.gz
 
 # ----- build
 # gawk
