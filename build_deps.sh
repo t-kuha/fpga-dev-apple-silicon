@@ -16,6 +16,9 @@ function downloadsrc () {
     fi
 }
 
+# num. of CPU cores
+NCPU=$(sysctl -n hw.ncpu)
+
 # create temp. directory
 TOP_DIR=$(dirname $(realpath "${BASH_SOURCE[0]}"))
 TOOLS_DIR=${TOP_DIR}/tools
@@ -115,80 +118,80 @@ eigen.tar.gz
 pushd ${TOP_DIR} > /dev/null
 cd ${DEPS_DIR}/gawk
 ./configure --prefix=${TOOLS_DIR}
-make -j8 install
+make -j${NCPU} install
 popd > /dev/null
 
 # sed
 pushd ${TOP_DIR} > /dev/null
 cd ${DEPS_DIR}/sed
 ./configure --prefix=${TOOLS_DIR}
-make -j8 install
+make -j${NCPU} install
 popd > /dev/null
 
 # texinfo
 pushd ${TOP_DIR} > /dev/null
 cd ${DEPS_DIR}/texinfo
 ./configure --prefix=${TOOLS_DIR} --disable-perl-xs
-make -j8 install
+make -j${NCPU} install
 popd > /dev/null
 
 # m4
 pushd ${TOP_DIR} > /dev/null
 cd ${DEPS_DIR}/m4
 ./configure --prefix=${TOOLS_DIR}
-make -j8 install
+make -j${NCPU} install
 popd > /dev/null
 
 # pkg-config
 pushd ${TOP_DIR} > /dev/null
 cd ${DEPS_DIR}/pkg-config
 ./configure --prefix=${TOOLS_DIR} --with-internal-glib
-make -j8 install
+make -j${NCPU} install
 popd > /dev/null
 
 # libusb
 pushd ${TOP_DIR} > /dev/null
 cd ${DEPS_DIR}/libusb
 ./configure --prefix=${TOOLS_DIR}
-make -j8 install
+make -j${NCPU} install
 popd > /dev/null
 
 # libftdi1
 cmake -S ${DEPS_DIR}/libftdi1 -B ${BUILD_DIR}/libftdi -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF -DSTATICLIBS=OFF -DCMAKE_INSTALL_NAME_DIR=${TOOLS_DIR}/lib
-cmake --build ${BUILD_DIR}/libftdi -- -j8
+cmake --build ${BUILD_DIR}/libftdi -- -j${NCPU}
 cmake --install ${BUILD_DIR}/libftdi
 
 # zlib
 cmake -S ${DEPS_DIR}/zlib -B ${BUILD_DIR}/zlib -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release
-cmake --build ${BUILD_DIR}/zlib -- -j8
+cmake --build ${BUILD_DIR}/zlib -- -j${NCPU}
 cmake --install ${BUILD_DIR}/zlib
 
 # readline
 pushd ${TOP_DIR} > /dev/null
 cd ${DEPS_DIR}/readline
 ./configure --prefix=${TOOLS_DIR}
-make -j8 install
+make -j${NCPU} install
 popd > /dev/null
 
 # bison
 pushd ${TOP_DIR} > /dev/null
 cd ${DEPS_DIR}/bison
 ./configure --prefix=${TOOLS_DIR}
-make -j8 install
+make -j${NCPU} install
 popd > /dev/null
 
 # libffi
 pushd ${TOP_DIR} > /dev/null
 cd ${DEPS_DIR}/libffi
 ./configure --prefix=${TOOLS_DIR}
-make -j8 install
+make -j${NCPU} install
 popd > /dev/null
 
 # libssl
 pushd ${TOP_DIR} > /dev/null
 cd ${DEPS_DIR}/openssl
 ./Configure --prefix=${TOOLS_DIR}
-make -j8 
+make -j${NCPU} 
 make install
 popd > /dev/null
 
@@ -196,7 +199,7 @@ popd > /dev/null
 pushd ${TOP_DIR} > /dev/null
 cd ${DEPS_DIR}/Python
 ./configure --prefix=${TOOLS_DIR} --enable-optimizations --with-openssl=${TOOLS_DIR}
-make -j8
+make -j${NCPU}
 make install
 # python3 -> python
 pushd ${TOP_DIR} > /dev/null
@@ -214,5 +217,5 @@ popd > /dev/null
 
 # eigen
 cmake -S ${DEPS_DIR}/eigen -B ${BUILD_DIR}/eigen -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release
-cmake --build ${BUILD_DIR}/eigen -- -j8
+cmake --build ${BUILD_DIR}/eigen -- -j${NCPU}
 cmake --install ${BUILD_DIR}/eigen

@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# num. of CPU cores
+NCPU=$(sysctl -n hw.ncpu)
+
 # create temp. directory
 TOP_DIR=$(dirname $(realpath "${BASH_SOURCE[0]}"))
 TOOLS_DIR=${TOP_DIR}/tools
@@ -45,18 +48,18 @@ pip3 cache purge
 # ----- build
 # openFPGALoader
 cmake -S ${REPOS_DIR}/openFPGALoader -B ${BUILD_DIR}/ofl -DCMAKE_PREFIX_PATH=${TOOLS_DIR} -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release
-cmake --build ${BUILD_DIR}/ofl -- -j8
+cmake --build ${BUILD_DIR}/ofl -- -j${NCPU}
 cmake --install ${BUILD_DIR}/ofl
 
 # yosys
 pushd ${TOP_DIR} > /dev/null
 cd ${REPOS_DIR}/yosys
-make -j8 install PREFIX=${TOOLS_DIR} 
+make -j${NCPU} install PREFIX=${TOOLS_DIR} 
 popd > /dev/null
 
 # nextpnr
 cmake -S ${REPOS_DIR}/nextpnr -B ${BUILD_DIR}/nextpnr -DCMAKE_PREFIX_PATH=${TOOLS_DIR} -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release -DARCH=gowin
-cmake --build ${BUILD_DIR}/nextpnr -- -j8
+cmake --build ${BUILD_DIR}/nextpnr -- -j${NCPU}
 # something bad happens during install, so just copy the compiled artifact
 cp ${BUILD_DIR}/nextpnr/nextpnr-gowin ${TOOLS_DIR}/bin
 # cmake --install ${BUILD_DIR}/nextpnr

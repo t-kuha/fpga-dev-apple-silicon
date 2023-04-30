@@ -3,6 +3,9 @@
 # reference: https://msyksphinz.hatenablog.com/entry/2022/05/23/040000
 #
 
+# num. of CPU cores
+NCPU=$(sysctl -n hw.ncpu)
+
 # create temp. directory
 TOP_DIR=$(dirname $(realpath "${BASH_SOURCE[0]}"))
 TOOLS_DIR=${TOP_DIR}/tools
@@ -39,5 +42,5 @@ if [ ! -e build ]; then
 fi
 cd build
 ../configure --prefix=${TOOLS_DIR}
-make -j8
+make -j${NCPU}
 popd > /dev/null
