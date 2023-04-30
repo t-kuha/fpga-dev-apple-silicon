@@ -21,14 +21,14 @@ fi
 
 export PATH=${TOOLS_DIR}/bin:${PATH}
 
-# ----- 
+# ----- install Ninja
 pip install ninja
 
 # ----- gcc
 export RISCV=${TOOLS_DIR}
 if [ ! -e ${GCC_DIR}/riscv-gnu-toolchain ]; then
     mkdir -p ${GCC_DIR}
-    git clone https://github.com/riscv-collab/riscv-gnu-toolchain.git ${GCC_DIR}/riscv-gnu-toolchain -b 2022.05.15
+    git clone https://github.com/riscv-collab/riscv-gnu-toolchain.git ${GCC_DIR}/riscv-gnu-toolchain -b 2023.04.25
     pushd ${TOP_DIR} > /dev/null
     cd ${GCC_DIR}/riscv-gnu-toolchain
     git submodule sync
