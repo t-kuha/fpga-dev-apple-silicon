@@ -28,6 +28,7 @@ WORK_DIR=${TOP_DIR}/_work
 DEPS_DIR=${WORK_DIR}/deps
 SRC_DIR=${WORK_DIR}/src
 BUILD_DIR=${WORK_DIR}/build
+REPOS_DIR=${WORK_DIR}/repos
 
 if [ ! -e ${TOOLS_DIR} ]; then
     mkdir -p ${TOOLS_DIR}/bin
