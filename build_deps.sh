@@ -16,6 +16,8 @@ function downloadsrc () {
     fi
 }
 
+echo ----- building dependencies -----
+
 # num. of CPU cores
 NCPU=$(sysctl -n hw.ncpu)
 
@@ -41,6 +43,9 @@ if [ ! -e ${SRC_DIR} ]; then
 fi
 if [ ! -e ${BUILD_DIR} ]; then
     mkdir ${BUILD_DIR}
+fi
+if [ ! -e ${REPOS_DIR} ]; then
+    mkdir ${REPOS_DIR}
 fi
 
 # update PATH env. variable
@@ -112,6 +117,13 @@ boost.tar.gz
 downloadsrc \
 https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz \
 eigen.tar.gz
+
+if [ ! -e ${REPOS_DIR}/openFPGALoader ]; then
+    git clone https://github.com/trabucayre/openFPGALoader.git ${REPOS_DIR}/openFPGALoader -b v0.10.0
+fi
+if [ ! -e ${REPOS_DIR}/yosys ]; then
+    git clone https://github.com/YosysHQ/yosys.git ${REPOS_DIR}/yosys -b yosys-0.28
+fi
 
 # ----- build
 # gawk
@@ -219,3 +231,14 @@ popd > /dev/null
 cmake -S ${DEPS_DIR}/eigen -B ${BUILD_DIR}/eigen -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release
 cmake --build ${BUILD_DIR}/eigen -- -j${NCPU}
 cmake --install ${BUILD_DIR}/eigen
+
+# openFPGALoader
+cmake -S ${REPOS_DIR}/openFPGALoader -B ${BUILD_DIR}/ofl -DCMAKE_PREFIX_PATH=${TOOLS_DIR} -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release
+cmake --build ${BUILD_DIR}/ofl -- -j${NCPU}
+cmake --install ${BUILD_DIR}/ofl
+
+# yosys
+pushd ${TOP_DIR} > /dev/null
+cd ${REPOS_DIR}/yosys
+make -j${NCPU} install PREFIX=${TOOLS_DIR} 
+popd > /dev/null

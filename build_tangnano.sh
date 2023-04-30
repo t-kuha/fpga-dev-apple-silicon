@@ -31,12 +31,6 @@ fi
 export PATH=${TOOLS_DIR}/bin:${TOOLS_DIR}/bin/CMake.app/Contents/bin:${PATH}
 
 # sources
-if [ ! -e ${REPOS_DIR}/openFPGALoader ]; then
-    git clone https://github.com/trabucayre/openFPGALoader.git ${REPOS_DIR}/openFPGALoader -b v0.10.0
-fi
-if [ ! -e ${REPOS_DIR}/yosys ]; then
-    git clone https://github.com/YosysHQ/yosys.git ${REPOS_DIR}/yosys -b yosys-0.28
-fi
 if [ ! -e ${REPOS_DIR}/nextpnr ]; then
     git clone https://github.com/YosysHQ/nextpnr.git ${REPOS_DIR}/nextpnr -b 051bdb1
 fi
@@ -46,17 +40,6 @@ pip3 install apycula meson
 pip3 cache purge
 
 # ----- build
-# openFPGALoader
-cmake -S ${REPOS_DIR}/openFPGALoader -B ${BUILD_DIR}/ofl -DCMAKE_PREFIX_PATH=${TOOLS_DIR} -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release
-cmake --build ${BUILD_DIR}/ofl -- -j${NCPU}
-cmake --install ${BUILD_DIR}/ofl
-
-# yosys
-pushd ${TOP_DIR} > /dev/null
-cd ${REPOS_DIR}/yosys
-make -j${NCPU} install PREFIX=${TOOLS_DIR} 
-popd > /dev/null
-
 # nextpnr
 cmake -S ${REPOS_DIR}/nextpnr -B ${BUILD_DIR}/nextpnr -DCMAKE_PREFIX_PATH=${TOOLS_DIR} -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release -DARCH=gowin
 cmake --build ${BUILD_DIR}/nextpnr -- -j${NCPU}
@@ -64,6 +47,7 @@ cmake --build ${BUILD_DIR}/nextpnr -- -j${NCPU}
 cp ${BUILD_DIR}/nextpnr/nextpnr-gowin ${TOOLS_DIR}/bin
 # cmake --install ${BUILD_DIR}/nextpnr
 
+# LiteX
 pushd ${TOP_DIR} > /dev/null
 cd ${LITEX_DIR}
 if [ ! -e litex_setup.py ]; then

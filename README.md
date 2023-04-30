@@ -8,12 +8,33 @@ FPGA development on Apple Silicon Mac solely with open source tools
 
 ```shell-session
 $ ./build_deps.sh
-$ ./build_rscv-gcc.sh
+$ ./build_riscv-gcc.sh
 ```
 
+***
 
 ## Sipeed Tangnano
 
+- install Yosys / nextpnr / 
+
 ```shell-session
-$ ./build.sh
+$ ./build_tangnano.sh
+```
+
+- program bitstream
+
+```
+$ openFPGALoader --detect
+Jtag frequency : requested 6.00MHz   -> real 6.00MHz  
+index 0:
+        idcode 0x100481b
+        manufacturer Gowin
+        family GW1N
+        model  GW1N(R)-9C
+        irlength 8
+
+# to SRAM
+$ openFPGALoader -m <bitstream>.fs
+# or to FLASH
+$ openFPGALoader -f <bitstream>.fs
 ```
