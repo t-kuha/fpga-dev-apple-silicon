@@ -1,5 +1,11 @@
 #!/bin/sh
 
+function make_dir () {
+    if [ ! -e $1 ]; then
+        mkdir $1
+    fi
+}
+
 # num. of CPU cores
 NCPU=$(sysctl -n hw.ncpu)
 
@@ -11,21 +17,11 @@ WORK_DIR=${TOP_DIR}/_work
 BUILD_DIR=${WORK_DIR}/build
 REPOS_DIR=${WORK_DIR}/repos
 
-if [ ! -e ${WORK_DIR} ]; then
-    mkdir ${WORK_DIR}
-fi
-if [ ! -e ${TOOLS_DIR} ]; then
-    mkdir ${TOOLS_DIR}
-fi
-if [ ! -e ${LITEX_DIR} ]; then
-    mkdir ${LITEX_DIR}
-fi
-if [ ! -e ${BUILD_DIR} ]; then
-    mkdir ${BUILD_DIR}
-fi
-if [ ! -e ${REPOS_DIR} ]; then
-    mkdir ${REPOS_DIR}
-fi
+make_dir ${WORK_DIR}
+make_dir ${TOOLS_DIR}
+make_dir ${LITEX_DIR}
+make_dir ${BUILD_DIR}
+make_dir ${REPOS_DIR}
 
 # update PATH env. variable
 export PATH=${TOOLS_DIR}/bin:${TOOLS_DIR}/bin/CMake.app/Contents/bin:${PATH}

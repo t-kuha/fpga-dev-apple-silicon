@@ -1,5 +1,11 @@
 #!/bin/sh
 
+function make_dir () {
+    if [ ! -e $1 ]; then
+        mkdir $1
+    fi
+}
+
 function downloadsrc () {
     # usage: downloadsrc <url> <tar_name w/o version>
     url=$1
@@ -30,24 +36,13 @@ SRC_DIR=${WORK_DIR}/src
 BUILD_DIR=${WORK_DIR}/build
 REPOS_DIR=${WORK_DIR}/repos
 
-if [ ! -e ${TOOLS_DIR} ]; then
-    mkdir -p ${TOOLS_DIR}/bin
-fi
-if [ ! -e ${WORK_DIR} ]; then
-    mkdir ${WORK_DIR}
-fi
-if [ ! -e ${DEPS_DIR} ]; then
-    mkdir ${DEPS_DIR}
-fi
-if [ ! -e ${SRC_DIR} ]; then
-    mkdir ${SRC_DIR}
-fi
-if [ ! -e ${BUILD_DIR} ]; then
-    mkdir ${BUILD_DIR}
-fi
-if [ ! -e ${REPOS_DIR} ]; then
-    mkdir ${REPOS_DIR}
-fi
+make_dir ${TOOLS_DIR}
+make_dir ${TOOLS_DIR}/bin
+make_dir ${WORK_DIR}
+make_dir ${DEPS_DIR}
+make_dir ${SRC_DIR}
+make_dir ${BUILD_DIR}
+make_dir ${REPOS_DIR}
 
 # update PATH env. variable
 export PATH=${TOOLS_DIR}/bin:${TOOLS_DIR}/bin/CMake.app/Contents/bin:${PATH}
