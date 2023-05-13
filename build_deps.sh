@@ -234,6 +234,7 @@ cmake --build ${BUILD_DIR}/ofl -- -j${NCPU}
 cmake --install ${BUILD_DIR}/ofl
 
 # yosys
+patch ${REPOS_DIR}/yosys/Makefile patches/yosys.patch  # do not use Homebrew
 pushd ${TOP_DIR} > /dev/null
 cd ${REPOS_DIR}/yosys
 make -j${NCPU} install PREFIX=${TOOLS_DIR} 
