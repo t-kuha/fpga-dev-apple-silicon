@@ -118,7 +118,7 @@ if [ ! -e ${REPOS_DIR}/openFPGALoader ]; then
     git clone https://github.com/trabucayre/openFPGALoader.git ${REPOS_DIR}/openFPGALoader -b v0.10.0
 fi
 if [ ! -e ${REPOS_DIR}/yosys ]; then
-    git clone https://github.com/YosysHQ/yosys.git ${REPOS_DIR}/yosys -b yosys-0.28
+    git clone https://github.com/YosysHQ/yosys.git ${REPOS_DIR}/yosys -b yosys-0.29
 fi
 
 # ----- build
