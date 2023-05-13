@@ -1,6 +1,10 @@
 # working directory
 _work
 
+# macOS system files
+.DS_Store 
+
 # tools etc.
 tools
 litex
+tinygrad
