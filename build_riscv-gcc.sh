@@ -9,14 +9,14 @@ NCPU=$(sysctl -n hw.ncpu)
 # create temp. directory
 TOP_DIR=$(dirname $(realpath "${BASH_SOURCE[0]}"))
 TOOLS_DIR=${TOP_DIR}/tools
-GCC_DIR=${TOP_DIR}/_work/gcc
+WORK_DIR=${TOP_DIR}/_work
 
 if [ ! -e ${TOOLS_DIR} ]; then
     echo "tools directory not found, exitting..."
     exit
 fi
-if [ ! -e ${GCC_DIR} ]; then
-    mkdir -p ${GCC_DIR}
+if [ ! -e ${WORK_DIR} ]; then
+    mkdir -p ${WORK_DIR}
 fi
 
 export PATH=${TOOLS_DIR}/bin:${PATH}
@@ -26,23 +26,20 @@ pip install ninja
 
 # ----- gcc
 export RISCV=${TOOLS_DIR}
-if [ -e ${GCC_DIR}/riscv-gnu-toolchain ]; then
-    rm -rf ${GCC_DIR}/riscv-gnu-toolchain
+
+if [ -e ${WORK_DIR}/riscv-gnu-toolchain ]; then
+    rm -rf ${WORK_DIR}/riscv-gnu-toolchain
 fi
-mkdir -p ${GCC_DIR}
-git clone https://github.com/riscv-collab/riscv-gnu-toolchain.git ${GCC_DIR}/riscv-gnu-toolchain -b 2023.07.07
+git clone https://github.com/riscv-collab/riscv-gnu-toolchain.git ${WORK_DIR}/riscv-gnu-toolchain -b 2023.07.07
 pushd ${TOP_DIR} > /dev/null
-cd ${GCC_DIR}/riscv-gnu-toolchain
+cd ${WORK_DIR}/riscv-gnu-toolchain
 git submodule sync
 git submodule update --init --recursive
-popd > /dev/null
-pushd ${TOP_DIR} > /dev/null
 
-cd ${GCC_DIR}/riscv-gnu-toolchain
-if [ ! -e build ]; then
-    mkdir build
+if [ -e build ]; then
+    rm -rf build
 fi
-cd build
-../configure --prefix=${TOOLS_DIR}
+mkdir build && cd build
+../configure --prefix=${TOOLS_DIR} --enable-multilib
 make -j${NCPU}
 popd > /dev/null
