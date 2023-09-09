@@ -49,14 +49,18 @@ make_dir ${REPOS_DIR}
 export PATH=${TOOLS_DIR}/bin:${TOOLS_DIR}/bin/CMake.app/Contents/bin:${PATH}
 
 # prjxray
-if [ ! -e ${REPOS_DIR}/prjxray ]; then
-    pushd ${TOP_DIR} > /dev/null
-    git clone https://github.com/f4pga/prjxray.git ${REPOS_DIR}/prjxray
-    cd ${REPOS_DIR}/prjxray
-    git submodule update --init --recursive
-    popd > /dev/null
+if [ -e ${REPOS_DIR}/prjxray ]; then
+    rm -rf ${REPOS_DIR}/prjxray
 fi
-cmake -S ${REPOS_DIR}/prjxray -B ${BUILD_DIR}/prjxray -DCMAKE_PREFIX_PATH=${TOOLS_DIR} -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=14
+pushd ${TOP_DIR} > /dev/null
+git clone https://github.com/f4pga/prjxray.git ${REPOS_DIR}/prjxray
+cd ${REPOS_DIR}/prjxray
+git submodule update --init --recursive
+popd > /dev/null
+
+cmake -S ${REPOS_DIR}/prjxray -B ${BUILD_DIR}/prjxray \
+-DCMAKE_PREFIX_PATH=${TOOLS_DIR} -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} \
+-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=14
 cmake --build ${BUILD_DIR}/prjxray -- -j${NCPU}
 cmake --install ${BUILD_DIR}/prjxray
 
@@ -67,14 +71,18 @@ popd > /dev/null
 
 # nexpnr-xilinx
 if [ ! -e ${REPOS_DIR}/nextpnr-xilinx ]; then
-    pushd ${TOP_DIR} > /dev/null
-    git clone https://github.com/gatecat/nextpnr-xilinx.git ${REPOS_DIR}/nextpnr-xilinx
-
-    cd ${REPOS_DIR}/nextpnr-xilinx
-    git submodule update --init --recursive
-    popd > /dev/null
+    rm -rf ${REPOS_DIR}/nextpnr-xilinx
 fi
-cmake -S ${REPOS_DIR}/nextpnr-xilinx -B ${BUILD_DIR}/nextpnr-xilinx -DCMAKE_PREFIX_PATH=${TOOLS_DIR} -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release -DARCH=xilinx
+pushd ${TOP_DIR} > /dev/null
+git clone https://github.com/gatecat/nextpnr-xilinx.git ${REPOS_DIR}/nextpnr-xilinx
+
+cd ${REPOS_DIR}/nextpnr-xilinx
+git submodule update --init --recursive
+popd > /dev/null
+
+cmake -S ${REPOS_DIR}/nextpnr-xilinx -B ${BUILD_DIR}/nextpnr-xilinx \
+-DCMAKE_PREFIX_PATH=${TOOLS_DIR} -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} \
+-DCMAKE_BUILD_TYPE=Release -DARCH=xilinx
 cmake --build ${BUILD_DIR}/nextpnr-xilinx -- -j${NCPU}
 # FIXME: rpath
 # cmake --install ${BUILD_DIR}/nextpnr-xilinx
