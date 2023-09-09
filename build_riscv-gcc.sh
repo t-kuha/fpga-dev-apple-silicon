@@ -26,16 +26,18 @@ pip install ninja
 
 # ----- gcc
 export RISCV=${TOOLS_DIR}
-if [ ! -e ${GCC_DIR}/riscv-gnu-toolchain ]; then
-    mkdir -p ${GCC_DIR}
-    git clone https://github.com/riscv-collab/riscv-gnu-toolchain.git ${GCC_DIR}/riscv-gnu-toolchain -b 2023.04.25
-    pushd ${TOP_DIR} > /dev/null
-    cd ${GCC_DIR}/riscv-gnu-toolchain
-    git submodule sync
-    git submodule update --init --recursive
-    popd > /dev/null
+if [ -e ${GCC_DIR}/riscv-gnu-toolchain ]; then
+    rm -rf ${GCC_DIR}/riscv-gnu-toolchain
 fi
+mkdir -p ${GCC_DIR}
+git clone https://github.com/riscv-collab/riscv-gnu-toolchain.git ${GCC_DIR}/riscv-gnu-toolchain -b 2023.07.07
 pushd ${TOP_DIR} > /dev/null
+cd ${GCC_DIR}/riscv-gnu-toolchain
+git submodule sync
+git submodule update --init --recursive
+popd > /dev/null
+pushd ${TOP_DIR} > /dev/null
+
 cd ${GCC_DIR}/riscv-gnu-toolchain
 if [ ! -e build ]; then
     mkdir build
