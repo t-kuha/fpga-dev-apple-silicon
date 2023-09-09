@@ -27,9 +27,10 @@ make_dir ${REPOS_DIR}
 export PATH=${TOOLS_DIR}/bin:${TOOLS_DIR}/bin/CMake.app/Contents/bin:${PATH}
 
 # sources
-if [ ! -e ${REPOS_DIR}/nextpnr ]; then
-    git clone https://github.com/YosysHQ/nextpnr.git ${REPOS_DIR}/nextpnr -b 051bdb1
+if [ -e ${REPOS_DIR}/nextpnr ]; then
+    rm -rf ${REPOS_DIR}/nextpnr
 fi
+git clone https://github.com/YosysHQ/nextpnr.git ${REPOS_DIR}/nextpnr -b nextpnr-0.6
 
 # install necessary Python package
 pip3 install apycula meson
