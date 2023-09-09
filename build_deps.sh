@@ -119,9 +119,10 @@ if [ -e ${REPOS_DIR}/openFPGALoader ]; then
     rm -rf ${REPOS_DIR}/openFPGALoader
 fi
 git clone https://github.com/trabucayre/openFPGALoader.git ${REPOS_DIR}/openFPGALoader -b v0.11.0
-if [ ! -e ${REPOS_DIR}/yosys ]; then
-    git clone https://github.com/YosysHQ/yosys.git ${REPOS_DIR}/yosys -b yosys-0.29
+if [ -e ${REPOS_DIR}/yosys ]; then
+    rm -rf ${REPOS_DIR}/yosys
 fi
+git clone https://github.com/YosysHQ/yosys.git ${REPOS_DIR}/yosys -b yosys-0.33
 
 # ----- build
 # gawk
