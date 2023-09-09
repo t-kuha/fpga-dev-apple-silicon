@@ -24,6 +24,7 @@ $ ./build_tangnano.sh
 - program bitstream
 
 ```
+$ export PATH=$(pwd)/tools/bin:${PATH}
 $ openFPGALoader --detect
 Jtag frequency : requested 6.00MHz   -> real 6.00MHz  
 index 0:
