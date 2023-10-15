@@ -57,7 +57,7 @@ $ mkdir tinygrad && cd tinygrad
 $ git clone https://github.com/geohot/tinygrad.git
 $ cd tinygrad
 $ git checkout 90529d3
-$ cd accel/cherry
+$ cd tinygrad/accel/cherry
 $ mkdir out
 $ ./riscv.sh
 $ cd out
