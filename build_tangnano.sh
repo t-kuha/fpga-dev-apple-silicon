@@ -48,7 +48,7 @@ cp ${BUILD_DIR}/nextpnr/nextpnr-gowin ${TOOLS_DIR}/bin
 pushd ${TOP_DIR} > /dev/null
 cd ${LITEX_DIR}
 if [ ! -e litex_setup.py ]; then
-    curl -o litex_setup.py https://raw.githubusercontent.com/enjoy-digital/litex/2023.04/litex_setup.py
+    curl -o litex_setup.py https://raw.githubusercontent.com/enjoy-digital/litex/2023.08/litex_setup.py
     chmod +x litex_setup.py
 fi
 ./litex_setup.py --init --install
