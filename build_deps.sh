@@ -49,7 +49,7 @@ export PATH=${TOOLS_DIR}/bin:${TOOLS_DIR}/bin/CMake.app/Contents/bin:${PATH}
 
 # ----- prepare CMake
 if [ ! -e ${TOOLS_DIR}/bin/CMake.app ]; then
-    curl -L -o ${SRC_DIR}/cmake.tar.gz https://github.com/Kitware/CMake/releases/download/v3.26.3/cmake-3.26.3-macos-universal.tar.gz
+    curl -L -o ${SRC_DIR}/cmake.tar.gz https://github.com/Kitware/CMake/releases/download/v3.28.3/cmake-3.28.3-macos-universal.tar.gz
     tar xf ${SRC_DIR}/cmake.tar.gz -C tools/bin --strip-components 1
 fi
 
