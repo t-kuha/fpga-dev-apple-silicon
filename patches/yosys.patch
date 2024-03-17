@@ -1,22 +1,39 @@
+From c71bb8eadc36952faf9f8a10fb1bf6e88facb83a Mon Sep 17 00:00:00 2001
+From: t-kuha <imagingtechnerd@gmail.com>
+Date: Sun, 17 Mar 2024 14:45:51 +0900
+Subject: [PATCH] do not use Homebrew
+
+---
+ Makefile | 25 +------------------------
+ 1 file changed, 1 insertion(+), 24 deletions(-)
+
 diff --git a/Makefile b/Makefile
-index 8d5a90344..6832f56b0 100644
+index 00fd26bb1..8cb132306 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -110,30 +110,6 @@ AWK ?= awk
- 
+@@ -95,7 +95,7 @@ CXXFLAGS := $(CXXFLAGS) -Wall -Wextra -ggdb -I. -I"$(YOSYS_SRC)" -MD -MP -D_YOSY
+ LIBS := $(LIBS) -lstdc++ -lm
+ PLUGIN_LINKFLAGS :=
+ PLUGIN_LIBS :=
+-EXE_LINKFLAGS :=
++EXE_LINKFLAGS := -Wl,-rpath,$(PREFIX)/lib
+ ifeq ($(OS), MINGW)
+ EXE_LINKFLAGS := -Wl,--export-all-symbols -Wl,--out-implib,libyosys_exe.a
+ PLUGIN_LINKFLAGS += -L"$(LIBDIR)"
+@@ -111,29 +111,6 @@ AWK ?= awk
  ifeq ($(OS), Darwin)
- PLUGIN_LDFLAGS += -undefined dynamic_lookup
--
+ PLUGIN_LINKFLAGS += -undefined dynamic_lookup
+ 
 -# homebrew search paths
 -ifneq ($(shell :; command -v brew),)
 -BREW_PREFIX := $(shell brew --prefix)/opt
 -$(info $$BREW_PREFIX is [${BREW_PREFIX}])
 -ifeq ($(ENABLE_PYOSYS),1)
 -CXXFLAGS += -I$(BREW_PREFIX)/boost/include/boost
--LDFLAGS += -L$(BREW_PREFIX)/boost/lib
+-LINKFLAGS += -L$(BREW_PREFIX)/boost/lib
 -endif
 -CXXFLAGS += -I$(BREW_PREFIX)/readline/include
--LDFLAGS += -L$(BREW_PREFIX)/readline/lib
+-LINKFLAGS += -L$(BREW_PREFIX)/readline/lib
 -PKG_CONFIG_PATH := $(BREW_PREFIX)/libffi/lib/pkgconfig:$(PKG_CONFIG_PATH)
 -PKG_CONFIG_PATH := $(BREW_PREFIX)/tcl-tk/lib/pkgconfig:$(PKG_CONFIG_PATH)
 -export PATH := $(BREW_PREFIX)/bison/bin:$(BREW_PREFIX)/gettext/bin:$(BREW_PREFIX)/flex/bin:$(PATH)
@@ -25,11 +42,14 @@ index 8d5a90344..6832f56b0 100644
 -else ifneq ($(shell :; command -v port),)
 -PORT_PREFIX := $(patsubst %/bin/port,%,$(shell :; command -v port))
 -CXXFLAGS += -I$(PORT_PREFIX)/include
--LDFLAGS += -L$(PORT_PREFIX)/lib
+-LINKFLAGS += -L$(PORT_PREFIX)/lib
 -PKG_CONFIG_PATH := $(PORT_PREFIX)/lib/pkgconfig:$(PKG_CONFIG_PATH)
 -export PATH := $(PORT_PREFIX)/bin:$(PATH)
 -endif
 -
  else
- LDFLAGS += -rdynamic
+ LINKFLAGS += -rdynamic
  ifneq ($(OS), OpenBSD)
+-- 
+2.39.3 (Apple Git-145)
+

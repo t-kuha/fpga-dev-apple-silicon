@@ -122,7 +122,7 @@ git clone https://github.com/trabucayre/openFPGALoader.git ${REPOS_DIR}/openFPGA
 if [ -e ${REPOS_DIR}/yosys ]; then
     rm -rf ${REPOS_DIR}/yosys
 fi
-git clone https://github.com/YosysHQ/yosys.git ${REPOS_DIR}/yosys -b yosys-0.33
+git clone https://github.com/YosysHQ/yosys.git ${REPOS_DIR}/yosys -b yosys-0.39
 
 # ----- build
 # gawk
