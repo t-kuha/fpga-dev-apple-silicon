@@ -30,7 +30,7 @@ export PATH=${TOOLS_DIR}/bin:${TOOLS_DIR}/bin/CMake.app/Contents/bin:${PATH}
 if [ -e ${REPOS_DIR}/nextpnr ]; then
     rm -rf ${REPOS_DIR}/nextpnr
 fi
-git clone https://github.com/YosysHQ/nextpnr.git ${REPOS_DIR}/nextpnr -b nextpnr-0.6
+git clone https://github.com/YosysHQ/nextpnr.git ${REPOS_DIR}/nextpnr -b nextpnr-0.7
 
 # install necessary Python package
 pip3 install apycula meson
@@ -38,11 +38,9 @@ pip3 cache purge
 
 # ----- build
 # nextpnr
-cmake -S ${REPOS_DIR}/nextpnr -B ${BUILD_DIR}/nextpnr -DCMAKE_PREFIX_PATH=${TOOLS_DIR} -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release -DARCH=gowin
-cmake --build ${BUILD_DIR}/nextpnr -- -j${NCPU}
-# something bad happens during install, so just copy the compiled artifact
-cp ${BUILD_DIR}/nextpnr/nextpnr-gowin ${TOOLS_DIR}/bin
-# cmake --install ${BUILD_DIR}/nextpnr
+cmake -S ${REPOS_DIR}/nextpnr -B ${BUILD_DIR}/nextpnr/build -DCMAKE_PREFIX_PATH=${TOOLS_DIR} -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_RPATH=${TOOLS_DIR}/lib -DARCH=gowin
+cmake --build ${BUILD_DIR}/nextpnr/build -- -j${NCPU}
+cmake --install ${BUILD_DIR}/nextpnr/build
 
 # LiteX
 pushd ${TOP_DIR} > /dev/null
