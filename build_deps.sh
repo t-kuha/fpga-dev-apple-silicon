@@ -83,7 +83,7 @@ https://www.intra2net.com/en/developer/libftdi/download/libftdi1-1.4.tar.bz2 \
 libftdi1.tar.bz2
 
 downloadsrc \
-https://www.zlib.net/zlib-1.2.13.tar.xz \
+https://www.zlib.net/zlib-1.3.1.tar.xz \
 zlib.tar.xz
 
 downloadsrc \
