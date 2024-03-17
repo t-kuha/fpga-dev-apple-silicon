@@ -46,7 +46,7 @@ cmake --install ${BUILD_DIR}/nextpnr/build
 pushd ${TOP_DIR} > /dev/null
 cd ${LITEX_DIR}
 if [ ! -e litex_setup.py ]; then
-    curl -o litex_setup.py https://raw.githubusercontent.com/enjoy-digital/litex/2023.08/litex_setup.py
+    curl -o litex_setup.py https://raw.githubusercontent.com/enjoy-digital/litex/2023.12/litex_setup.py
     chmod +x litex_setup.py
 fi
 ./litex_setup.py --init --install
