@@ -118,7 +118,7 @@ if [ -e ${REPOS_DIR}/openFPGALoader ]; then
     # remove exsiting one / start fresh
     rm -rf ${REPOS_DIR}/openFPGALoader
 fi
-git clone https://github.com/trabucayre/openFPGALoader.git ${REPOS_DIR}/openFPGALoader -b v0.11.0
+git clone https://github.com/trabucayre/openFPGALoader.git ${REPOS_DIR}/openFPGALoader -b v0.12.0
 if [ -e ${REPOS_DIR}/yosys ]; then
     rm -rf ${REPOS_DIR}/yosys
 fi
@@ -232,7 +232,8 @@ cmake --build ${BUILD_DIR}/eigen -- -j${NCPU}
 cmake --install ${BUILD_DIR}/eigen
 
 # openFPGALoader
-cmake -S ${REPOS_DIR}/openFPGALoader -B ${BUILD_DIR}/ofl -DCMAKE_PREFIX_PATH=${TOOLS_DIR} -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release
+rm -r ${BUILD_DIR}/ofl
+cmake -S ${REPOS_DIR}/openFPGALoader -B ${BUILD_DIR}/ofl -DCMAKE_PREFIX_PATH=${TOOLS_DIR} -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release -DENABLE_CMSISDAP=OFF -DCMAKE_INSTALL_RPATH=${TOOLS_DIR}/lib
 cmake --build ${BUILD_DIR}/ofl -- -j${NCPU}
 cmake --install ${BUILD_DIR}/ofl
 
