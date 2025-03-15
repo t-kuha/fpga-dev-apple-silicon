@@ -1,14 +1,15 @@
 # fpga-dev-apple-silicon
 
+![build test](https://github.com/t-kuha/fpga-dev-apple-silicon/actions/workflows/build.yml/badge.svg)
+
 FPGA development on Apple Silicon Mac solely with open source tools
 
-- macOS version: 15.3.2 (24D2082)
-
-![build test](https://github.com/t-kuha/fpga-dev-apple-silicon/actions/workflows/build.yml/badge.svg)
+- macOS version: 15 (Sequoia)
 
 ## set-up (common)
 
 ```shell
+$ ./install_python_uv.sh
 $ ./build_deps.sh
 $ ./build_riscv-gcc.sh
 ```
