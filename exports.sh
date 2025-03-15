@@ -31,6 +31,9 @@ make_dir ${BUILD_DIR}
 export PATH=${TOOLS_DIR}/bin:${TOOLS_DIR}/bin/CMake.app/Contents/bin:${PATH}
 
 # Python virtual env.
-source ${TOP_DIR}/.venv/bin/activate
+if [ -e ${TOP_DIR}/.venv/bin/activate ]; then
+    source ${TOP_DIR}/.venv/bin/activate
+    python -VV
+fi
 
 echo "[INFO] done."
