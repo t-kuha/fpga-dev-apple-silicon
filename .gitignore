@@ -5,6 +5,7 @@ _work
 .DS_Store 
 
 # tools etc.
+.venv
 tools
 litex
 tinygrad
