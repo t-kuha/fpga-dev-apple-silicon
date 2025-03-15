@@ -20,7 +20,7 @@ index 00fd26bb1..8cb132306 100644
  ifeq ($(OS), MINGW)
  EXE_LINKFLAGS := -Wl,--export-all-symbols -Wl,--out-implib,libyosys_exe.a
  PLUGIN_LINKFLAGS += -L"$(LIBDIR)"
-@@ -111,29 +111,6 @@ AWK ?= awk
+@@ -117,29 +117,6 @@ AWK ?= awk
  ifeq ($(OS), Darwin)
  PLUGIN_LINKFLAGS += -undefined dynamic_lookup
  
@@ -29,8 +29,8 @@ index 00fd26bb1..8cb132306 100644
 -BREW_PREFIX := $(shell brew --prefix)/opt
 -$(info $$BREW_PREFIX is [${BREW_PREFIX}])
 -ifeq ($(ENABLE_PYOSYS),1)
--CXXFLAGS += -I$(BREW_PREFIX)/boost/include/boost
--LINKFLAGS += -L$(BREW_PREFIX)/boost/lib
+-CXXFLAGS += -I$(BREW_PREFIX)/boost/include
+-LINKFLAGS += -L$(BREW_PREFIX)/boost/lib -L$(BREW_PREFIX)/boost-python3/lib
 -endif
 -CXXFLAGS += -I$(BREW_PREFIX)/readline/include
 -LINKFLAGS += -L$(BREW_PREFIX)/readline/lib

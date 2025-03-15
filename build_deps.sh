@@ -1,61 +1,42 @@
 #!/bin/sh
 
-function make_dir () {
-    if [ ! -e $1 ]; then
-        mkdir $1
-    fi
-}
-
 function downloadsrc () {
     # usage: downloadsrc <url> <tar_name w/o version>
     url=$1
     tar_name=$2
     lib_name=${tar_name%%.*}
-    # donwload
+    # download
     if [ ! -e ${SRC_DIR}/${tar_name} ]; then
         curl -L -o ${SRC_DIR}/${tar_name} ${url}
+        if [ ! $? -eq 0 ]; then
+            echo "[ERROR] curl/download failed..."
+        fi
     fi
     # extract
-    if [ ! -e ${DEPS_DIR}/${lib_name} ]; then
-        mkdir ${DEPS_DIR}/${lib_name}
-        tar xf ${SRC_DIR}/${tar_name} -C ${DEPS_DIR}/${lib_name} --strip-components 1
+    if [ ! -e ${BUILD_DIR}/${lib_name} ]; then
+        mkdir ${BUILD_DIR}/${lib_name}
+        tar xf ${SRC_DIR}/${tar_name} -C ${BUILD_DIR}/${lib_name} --strip-components 1
+        if [ ! $? -eq 0 ]; then
+            echo "[ERROR] tar failed..."
+        fi
     fi
 }
 
-echo ----- building dependencies -----
+echo "----- building dependencies -----"
 
-# num. of CPU cores
-NCPU=$(sysctl -n hw.ncpu)
-
-# create temp. directory
 TOP_DIR=$(dirname $(realpath "${BASH_SOURCE[0]}"))
-TOOLS_DIR=${TOP_DIR}/tools
-WORK_DIR=${TOP_DIR}/_work
-DEPS_DIR=${WORK_DIR}/deps
-SRC_DIR=${WORK_DIR}/src
-BUILD_DIR=${WORK_DIR}/build
-REPOS_DIR=${WORK_DIR}/repos
-
-make_dir ${TOOLS_DIR}
-make_dir ${TOOLS_DIR}/bin
-make_dir ${WORK_DIR}
-make_dir ${DEPS_DIR}
-make_dir ${SRC_DIR}
-make_dir ${BUILD_DIR}
-make_dir ${REPOS_DIR}
-
-# update PATH env. variable
-export PATH=${TOOLS_DIR}/bin:${TOOLS_DIR}/bin/CMake.app/Contents/bin:${PATH}
+source ${TOP_DIR}/exports.sh
 
 # ----- prepare CMake
 if [ ! -e ${TOOLS_DIR}/bin/CMake.app ]; then
-    curl -L -o ${SRC_DIR}/cmake.tar.gz https://github.com/Kitware/CMake/releases/download/v3.28.3/cmake-3.28.3-macos-universal.tar.gz
+    curl -L -o ${SRC_DIR}/cmake.tar.gz \
+    https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6-macos-universal.tar.gz
     tar xf ${SRC_DIR}/cmake.tar.gz -C tools/bin --strip-components 1
 fi
 
 # ----- download sources
 downloadsrc \
-https://ftp.gnu.org/gnu/gawk/gawk-5.2.1.tar.xz \
+https://ftp.gnu.org/gnu/gawk/gawk-5.3.1.tar.xz \
 gawk.tar.xz
 
 downloadsrc \
@@ -63,7 +44,7 @@ https://ftp.gnu.org/gnu/sed/sed-4.9.tar.xz \
 sed-4.9.tar.xz
 
 downloadsrc \
-https://ftp.gnu.org/gnu/texinfo/texinfo-7.0.3.tar.xz \
+https://ftp.gnu.org/gnu/texinfo/texinfo-7.2.tar.xz \
 texinfo.tar.xz
 
 downloadsrc \
@@ -75,7 +56,7 @@ https://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz \
 pkg-config.tar.gz
 
 downloadsrc \
-https://github.com/libusb/libusb/releases/download/v1.0.26/libusb-1.0.26.tar.bz2 \
+https://github.com/libusb/libusb/releases/download/v1.0.27/libusb-1.0.27.tar.bz2 \
 libusb.tar.bz2
 
 downloadsrc \
@@ -95,151 +76,131 @@ https://ftp.gnu.org/gnu/bison/bison-3.8.2.tar.xz \
 bison.tar.xz
 
 downloadsrc \
-https://github.com/libffi/libffi/releases/download/v3.4.4/libffi-3.4.4.tar.gz \
+https://github.com/libffi/libffi/releases/download/v3.4.7/libffi-3.4.7.tar.gz \
 libffi.tar.gz
 
 downloadsrc \
-https://www.openssl.org/source/openssl-3.1.0.tar.gz \
+https://www.openssl.org/source/openssl-3.4.1.tar.gz \
 openssl.tar.gz
 
 downloadsrc \
-https://www.python.org/ftp/python/3.11.3/Python-3.11.3.tar.xz \
-Python.tar.xz
-
-downloadsrc \
-https://boostorg.jfrog.io/artifactory/main/release/1.82.0/source/boost_1_82_0.tar.gz \
+https://archives.boost.io/release/1.87.0/source/boost_1_87_0.tar.bz2 \
 boost.tar.gz
 
 downloadsrc \
 https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz \
 eigen.tar.gz
 
-if [ -e ${REPOS_DIR}/openFPGALoader ]; then
+if [ -e ${SRC_DIR}/openFPGALoader ]; then
     # remove exsiting one / start fresh
-    rm -rf ${REPOS_DIR}/openFPGALoader
+    rm -rf ${SRC_DIR}/openFPGALoader
 fi
-git clone https://github.com/trabucayre/openFPGALoader.git ${REPOS_DIR}/openFPGALoader -b v0.12.0
-if [ -e ${REPOS_DIR}/yosys ]; then
-    rm -rf ${REPOS_DIR}/yosys
+git clone https://github.com/trabucayre/openFPGALoader.git ${SRC_DIR}/openFPGALoader -b v0.13.1
+if [ -e ${SRC_DIR}/yosys ]; then
+    rm -rf ${SRC_DIR}/yosys
 fi
-git clone https://github.com/YosysHQ/yosys.git ${REPOS_DIR}/yosys -b yosys-0.39
+git clone https://github.com/YosysHQ/yosys.git ${SRC_DIR}/yosys -b v0.51
 
 # ----- build
 # gawk
-pushd ${TOP_DIR} > /dev/null
-cd ${DEPS_DIR}/gawk
+pushd ${BUILD_DIR}/gawk > /dev/null
 ./configure --prefix=${TOOLS_DIR}
 make -j${NCPU} install
 popd > /dev/null
 
 # sed
-pushd ${TOP_DIR} > /dev/null
-cd ${DEPS_DIR}/sed
+pushd ${BUILD_DIR}/sed > /dev/null
 ./configure --prefix=${TOOLS_DIR}
 make -j${NCPU} install
 popd > /dev/null
 
 # texinfo
-pushd ${TOP_DIR} > /dev/null
-cd ${DEPS_DIR}/texinfo
+pushd ${BUILD_DIR}/texinfo > /dev/null
 ./configure --prefix=${TOOLS_DIR} --disable-perl-xs
 make -j${NCPU} install
 popd > /dev/null
 
 # m4
-pushd ${TOP_DIR} > /dev/null
-cd ${DEPS_DIR}/m4
+pushd ${BUILD_DIR}/m4 > /dev/null
 ./configure --prefix=${TOOLS_DIR}
 make -j${NCPU} install
 popd > /dev/null
 
 # pkg-config
-pushd ${TOP_DIR} > /dev/null
-cd ${DEPS_DIR}/pkg-config
-./configure --prefix=${TOOLS_DIR} --with-internal-glib
+pushd ${BUILD_DIR}/pkg-config > /dev/null
+./configure --prefix=${TOOLS_DIR} --with-internal-glib CFLAGS="-g -O2 -Wno-int-conversion"
 make -j${NCPU} install
 popd > /dev/null
 
 # libusb
-pushd ${TOP_DIR} > /dev/null
-cd ${DEPS_DIR}/libusb
+pushd ${BUILD_DIR}/libusb > /dev/null
 ./configure --prefix=${TOOLS_DIR}
 make -j${NCPU} install
 popd > /dev/null
 
 # libftdi1
-cmake -S ${DEPS_DIR}/libftdi1 -B ${BUILD_DIR}/libftdi -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF -DSTATICLIBS=OFF -DCMAKE_INSTALL_NAME_DIR=${TOOLS_DIR}/lib
-cmake --build ${BUILD_DIR}/libftdi -- -j${NCPU}
-cmake --install ${BUILD_DIR}/libftdi
+cmake -S ${BUILD_DIR}/libftdi1 -B ${BUILD_DIR}/libftdi1/_build \
+-DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release \
+-DBUILD_TESTS=OFF -DSTATICLIBS=OFF -DCMAKE_INSTALL_NAME_DIR=${TOOLS_DIR}/lib
+cmake --build ${BUILD_DIR}/libftdi1/_build -- -j${NCPU}
+cmake --install ${BUILD_DIR}/libftdi1/_build
 
 # zlib
-cmake -S ${DEPS_DIR}/zlib -B ${BUILD_DIR}/zlib -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release
-cmake --build ${BUILD_DIR}/zlib -- -j${NCPU}
-cmake --install ${BUILD_DIR}/zlib
+cmake -S ${BUILD_DIR}/zlib -B ${BUILD_DIR}/zlib/_build \
+-DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release
+cmake --build ${BUILD_DIR}/zlib/_build -- -j${NCPU}
+cmake --install ${BUILD_DIR}/zlib/_build
 
 # readline
-pushd ${TOP_DIR} > /dev/null
-cd ${DEPS_DIR}/readline
+pushd ${BUILD_DIR}/readline > /dev/null
 ./configure --prefix=${TOOLS_DIR}
 make -j${NCPU} install
 popd > /dev/null
 
 # bison
-pushd ${TOP_DIR} > /dev/null
-cd ${DEPS_DIR}/bison
+pushd ${BUILD_DIR}/bison > /dev/null
 ./configure --prefix=${TOOLS_DIR}
 make -j${NCPU} install
 popd > /dev/null
 
 # libffi
-pushd ${TOP_DIR} > /dev/null
-cd ${DEPS_DIR}/libffi
+pushd ${BUILD_DIR}/libffi > /dev/null
 ./configure --prefix=${TOOLS_DIR}
 make -j${NCPU} install
 popd > /dev/null
 
 # libssl
-pushd ${TOP_DIR} > /dev/null
-cd ${DEPS_DIR}/openssl
+pushd ${BUILD_DIR}/openssl > /dev/null
 ./Configure --prefix=${TOOLS_DIR}
 make -j${NCPU} 
 make install
 popd > /dev/null
 
-# Python
-pushd ${TOP_DIR} > /dev/null
-cd ${DEPS_DIR}/Python
-./configure --prefix=${TOOLS_DIR} --enable-optimizations --with-openssl=${TOOLS_DIR}
-make -j${NCPU}
-make install
-# python3 -> python
-pushd ${TOP_DIR} > /dev/null
-cd ${TOOLS_DIR}/bin
-ln -s python3 python
-popd > /dev/null
-popd > /dev/null
-
 # boost
-pushd ${TOP_DIR} > /dev/null
-cd ${DEPS_DIR}/boost
+pushd ${BUILD_DIR}/boost
 ./bootstrap.sh --prefix=${TOOLS_DIR}
-./b2 variant=release link=shared threading=multi runtime-link=shared --prefix=${TOOLS_DIR} --with-filesystem --with-thread  --with-program_options --with-iostreams --with-system install
+./b2 variant=release link=shared threading=multi runtime-link=shared \
+--prefix=${TOOLS_DIR} --with-filesystem --with-thread --with-program_options --with-iostreams --with-system install
 popd > /dev/null
 
 # eigen
-cmake -S ${DEPS_DIR}/eigen -B ${BUILD_DIR}/eigen -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release
-cmake --build ${BUILD_DIR}/eigen -- -j${NCPU}
-cmake --install ${BUILD_DIR}/eigen
+cmake -S ${BUILD_DIR}/eigen -B ${BUILD_DIR}/eigen/_build -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release
+cmake --build ${BUILD_DIR}/eigen/_build -- -j${NCPU}
+cmake --install ${BUILD_DIR}/eigen/_build
 
 # openFPGALoader
 rm -r ${BUILD_DIR}/ofl
-cmake -S ${REPOS_DIR}/openFPGALoader -B ${BUILD_DIR}/ofl -DCMAKE_PREFIX_PATH=${TOOLS_DIR} -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release -DENABLE_CMSISDAP=OFF -DCMAKE_INSTALL_RPATH=${TOOLS_DIR}/lib
-cmake --build ${BUILD_DIR}/ofl -- -j${NCPU}
-cmake --install ${BUILD_DIR}/ofl
+cmake -S ${SRC_DIR}/openFPGALoader -B ${BUILD_DIR}/openFPGALoader \
+-DCMAKE_PREFIX_PATH=${TOOLS_DIR} -DCMAKE_INSTALL_PREFIX=${TOOLS_DIR} -DCMAKE_BUILD_TYPE=Release \
+-DENABLE_CMSISDAP=OFF -DCMAKE_INSTALL_RPATH=${TOOLS_DIR}/lib
+cmake --build ${BUILD_DIR}/openFPGALoader -- -j${NCPU}
+cmake --install ${BUILD_DIR}/openFPGALoader
 
 # yosys
-patch ${REPOS_DIR}/yosys/Makefile patches/yosys.patch  # do not use Homebrew
-pushd ${TOP_DIR} > /dev/null
-cd ${REPOS_DIR}/yosys
+patch ${SRC_DIR}/yosys/Makefile ${TOP_DIR}/patches/yosys.patch  # do not use Homebrew
+pushd ${SRC_DIR}/yosys
+git submodule update --init
 make -j${NCPU} install PREFIX=${TOOLS_DIR} 
 popd > /dev/null
+
+echo "----- done. -----"
