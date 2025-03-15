@@ -2,11 +2,13 @@
 
 FPGA development on Apple Silicon Mac solely with open source tools
 
+- macOS version: 15.3.2 (24D2082)
+
 ![build test](https://github.com/t-kuha/fpga-dev-apple-silicon/actions/workflows/build.yml/badge.svg)
 
 ## set-up (common)
 
-```shell-session
+```shell
 $ ./build_deps.sh
 $ ./build_riscv-gcc.sh
 ```
@@ -17,13 +19,13 @@ $ ./build_riscv-gcc.sh
 
 - install Yosys / nextpnr
 
-```shell-session
+```shell
 $ ./build_tangnano.sh
 ```
 
 - program bitstream
 
-```
+```shell
 $ export PATH=$(pwd)/tools/bin:${PATH}
 $ openFPGALoader --detect
 Jtag frequency : requested 6.00MHz   -> real 6.00MHz  
@@ -44,13 +46,13 @@ $ openFPGALoader -f <bitstream>.fs
 
 ## Xilinx 7-series FPGA
 
-```shell-session
+```shell
 $ ./build_xilinx.sh
 ```
 
 ### tinygrad
 
-```shell-session
+```shell
 $ export PATH=$(pwd)/tools/bin:$(pwd)/tools/bin/CMake.app/Contents/bin:${PATH}
 $ export TOP_DIR=$(pwd)
 $ mkdir tinygrad && cd tinygrad
