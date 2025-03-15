@@ -1,10 +1,8 @@
 #!/bin/sh
 
-TOP_DIR=$(dirname $(realpath "${BASH_SOURCE[0]}"))
-TOOLS_BIN_DIR=${TOP_DIR}/tools/bin
-WORK_DIR=${TOP_DIR}/_work
-SRC_DIR=${WORK_DIR}/src
-BUILD_DIR=${WORK_DIR}/build
+# set env. variables & PATH etc.
+TOP_DIR=$(dirname $(realpath $0))
+source ${TOP_DIR}/exports.sh
 
 mkdir -p ${TOOLS_BIN_DIR}
 mkdir -p ${WORK_DIR}
@@ -27,3 +25,5 @@ if [ ! -e ${TOP_DIR}/.venv ]; then
 fi
 # source .venv/bin/activate
 # python -VV
+
+echo "[INFO] installed Python in virtual env."
