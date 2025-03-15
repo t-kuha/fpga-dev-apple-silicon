@@ -1,0 +1,39 @@
+From c88cebb320e1757c3133a3768fc0b997c93ce9aa Mon Sep 17 00:00:00 2001
+From: t-kuha <imagingtechnerd@gmail.com>
+Date: Sat, 15 Mar 2025 14:13:01 +0900
+Subject: [PATCH] Support latest boost
+
+---
+ bba/main.cc              | 2 +-
+ common/kernel/command.cc | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/bba/main.cc b/bba/main.cc
+index 70fc3460..82c4426b 100644
+--- a/bba/main.cc
++++ b/bba/main.cc
+@@ -19,7 +19,7 @@
+  */
+ 
+ #include <assert.h>
+-#include <boost/filesystem/convenience.hpp>
++#include <boost/filesystem/path.hpp>
+ #include <boost/program_options.hpp>
+ #include <iostream>
+ #include <map>
+diff --git a/common/kernel/command.cc b/common/kernel/command.cc
+index 087af5b3..c354e024 100644
+--- a/common/kernel/command.cc
++++ b/common/kernel/command.cc
+@@ -29,7 +29,7 @@
+ 
+ #include <boost/algorithm/string.hpp>
+ #include <boost/algorithm/string/join.hpp>
+-#include <boost/filesystem/convenience.hpp>
++#include <boost/filesystem/path.hpp>
+ #include <boost/program_options.hpp>
+ #include <fstream>
+ #include <iostream>
+-- 
+2.39.5 (Apple Git-154)
+
