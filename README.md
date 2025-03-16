@@ -12,3 +12,10 @@ FPGA development on Apple Silicon Mac solely with open source tools
 $ ./install_python_uv.sh
 $ ./build_deps.sh
 ```
+
+***
+
+## references
+
+- [M1 Macでriscv-gnu-toolchainのビルド](https://msyksphinz.hatenablog.com/entry/2022/05/23/040000)
+- [macOS build fails: Makefile:51: *** commands commence before first target. Stop](https://github.com/riscv-collab/riscv-gnu-toolchain/issues/1598)
