@@ -41,7 +41,7 @@ gawk.tar.xz
 
 downloadsrc \
 https://ftp.gnu.org/gnu/sed/sed-4.9.tar.xz \
-sed-4.9.tar.xz
+sed.tar.xz
 
 downloadsrc \
 https://ftp.gnu.org/gnu/texinfo/texinfo-7.2.tar.xz \
