@@ -36,6 +36,10 @@ fi
 
 # ----- download sources
 downloadsrc \
+https://ftp.gnu.org/gnu/make/make-4.4.1.tar.gz \
+make.tar.xz
+
+downloadsrc \
 https://ftp.gnu.org/gnu/gawk/gawk-5.3.1.tar.xz \
 gawk.tar.xz
 
@@ -102,6 +106,12 @@ fi
 git clone https://github.com/YosysHQ/yosys.git ${SRC_DIR}/yosys -b v0.51
 
 # ----- build
+# make
+pushd ${BUILD_DIR}/make > /dev/null
+./configure --prefix=${TOOLS_DIR}
+make -j${NCPU} install
+popd > /dev/null
+
 # gawk
 pushd ${BUILD_DIR}/gawk > /dev/null
 ./configure --prefix=${TOOLS_DIR}
