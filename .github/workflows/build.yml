@@ -10,3 +10,5 @@ jobs:
         run: /bin/sh ./install_python_uv.sh
       - name: build dependency
         run: /bin/sh ./build_deps.sh
+      - name: build RISC-V toolchain
+        run: /bin/sh ./build_riscv-gcc.sh
