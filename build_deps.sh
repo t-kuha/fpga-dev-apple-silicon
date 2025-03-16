@@ -106,7 +106,7 @@ fi
 git clone https://github.com/YosysHQ/yosys.git ${SRC_DIR}/yosys -b v0.51
 
 # ----- build
-# make
+# make - use the latest one to compile RISC-V toolchain
 pushd ${BUILD_DIR}/make > /dev/null
 ./configure --prefix=${TOOLS_DIR}
 make -j${NCPU} install
@@ -134,6 +134,10 @@ popd > /dev/null
 pushd ${BUILD_DIR}/m4 > /dev/null
 ./configure --prefix=${TOOLS_DIR}
 make -j${NCPU} install
+pushd ${TOOLS_DIR}/bin > /dev/null
+# use built m4 insterad of gm4 command in nthe system
+ln -s m4 gm4
+popd > /dev/null
 popd > /dev/null
 
 # pkg-config
